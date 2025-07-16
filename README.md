@@ -15,12 +15,10 @@ For CIFAR10 and CIFAR100 datasets, please download and unzip data under DATA/ fi
 For DomainNet and office-caltech10 datasets, please follow the instructions of Dataset described [here](https://github.com/med-air/FedBN/blob/master/README.md).
 
 ## Training:
+```--root``` takes as input a path to dataset.
+```--config-file```means which config file to use.
+You can select variables like shots, users by changing cfg or you can change every arguments you like in scripts.
 
-* Train source models (shown here for Office-31 with source A)
-
-```shell
-python train_source.py --dset office-31 --s 1 --t 0 --max_epoch 100 --trte val --gpu_id 0 --output ckps/source/
-```
 
 * Adapt to target domain (shown here for Office-31 with target D)
 ```shell
