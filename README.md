@@ -16,11 +16,12 @@ For DomainNet and office-caltech10 datasets, please follow the instructions of D
 
 ## Training:
 ```--root``` takes as input a path to dataset.
+
 ```--config-file```means which config file to use.
+
 You can select variables like shots, users by changing cfg or you can change every arguments you like in scripts.
 
+## How to run
 
-* Adapt to target domain (shown here for Office-31 with target D)
-```shell
-python train_target.py --dset office-31 --t 1 --max_epoch 15 --gpu_id 0 --cls_par 0.7 --crc_par 0.01 --crc_mse 0.01 --output_src ckps/source/ --output ckps/DFM
-```
+
+
