@@ -1,4 +1,4 @@
-# FLORA
+# FLORA: Better Balance Between Generalization and Personalization in Multi-Modal Federated Prompt Learning
 Here is the official implementation of the model FLORA.
 
 ## Abstract
@@ -27,33 +27,11 @@ Federated Prompt Learning (FPL) leverages the robust representation learning and
 ```
 
 ## Datasets:
-* **Office Dataset:** Download the datasets [Office-31](https://drive.google.com/file/d/0B4IapRTv9pJ1WGZVd1VDMmhwdlE/view?resourcekey=0-gNMHVtZfRAyO_t2_WrOunA), [Office-Home](https://drive.google.com/file/d/0B81rNlvomiwed0V1YUxQdC1uOTg/view?resourcekey=0-2SNWq0CDAuWOBRRBL7ZZsw), [Office-Caltech](http://www.vision.caltech.edu/Image_Datasets/Caltech256/256_ObjectCategories.tar) .
-* **DomainNet Dataset:** Download [DomainNet](http://ai.bu.edu/DomainNet/) .
-* Place these datasets in './data'.
-* Using readfile.py to generate '.txt' file for each dataset (change dataset argument in the file accordingly).
-  
-```
-data
-│       
-└───Office-home
-│   │  Art
-│   │  Clipart
-│   │  Product
-|   |  Real_world
-|   |  Art_list.txt 
-|   |  Clipart_list.txt
-|   |  Product_list.txt 
-|   |  Real_world_list.txt
-└───DomainNet
-│   │    Clipart
-│   │    Infograph
-│   │   ...
-└───Office-Caltech
-│   │   ...
-└───Office-31
-│   │   ...
-...
-```
+Please follow the instructions at CoOP https://github.com/KaiyangZhou/CoOp/blob/main/DATASETS.md to prepare the following datasets: Caltech101, OxfordPets, Flowers102, Food101, DTD.
+
+For CIFAR10 and CIFAR100 datasets, please download and unzip data under DATA/ file catalog. Or simply run experiments with CIFAR10/CIFAR100 dataset, the program will download data automatically.
+
+For DomainNet and office-caltech10 datasets, please follow the instructions of Dataset described here .
 
 ## Training:
 
