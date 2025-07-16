@@ -1,29 +1,14 @@
 # FLORA: Better Balance Between Generalization and Personalization in Multi-Modal Federated Prompt Learning
 Here is the official implementation of the model FLORA.
-
+![F1](FLORA.png)
 ## Abstract
 Federated Prompt Learning (FPL) leverages the robust representation learning and remarkable generalization ability of large pre-trained Vision-Language Models (VLMS) into federated learning through prompt learning. Existing FPL methods attempt to address data heterogeneity via model personalization. However, excessive personalization leads to the compromise of model’s generalization ability, which remains a significant challenge to achieve a balance between personalization and generalization under high data heterogeneity. To address this challenge, we propose FLORA, a novel framework that combines orthogonal low-rank adaptation withattention-guided client adapter. Specifically, each client personalizes global prompt through orthogonal low-rank adaptation term, thereby achieving efficient local adaptation while maintaining the generalization of the global prompt. In addition, we introduce a lightweight attention-based adapter for the image encoder, which can enhance cross-modal alignment under nonindependent and nonidentically distributed (Non-IID) environment to further achieve the balance. Extensive experiments on multiple datasets demonstrate that our FLORA achieves superiority performance in balancing generalization and personalization over state-of-the-art methods under high data heterogeneity.
 
-## Method
-![F1](FLORA.png)
-
-* First, DFM-Trans model integrates model knowledge from diverse source domains through an adaptive Feature Fusion Network (FFN), combining local and global features to enhance the model's capacity for feature representation.
-
-* Second, DFM-Trans model introduces a dynamic weight adjustment mechanism based on predictive uncertainty, allowing adaptive adjustment of source model weights to optimize performance in the target domain.
-
-* Finally, a comprehensive confidence-driven pseudo-labeling strategy is proposed, prioritizing knowledge extraction from high-confidence samples and transferring it to lower-confidence samples, effectively reducing the generation of erroneous pseudo labels.
-
 ## Setup
-### Install Package Dependencies
-
+### requirement
+The required packages are listed in requirements.txt for requirement 
 ```
-* Python Environment: >= 3.6
-* torch >= 1.1.0
-* torchvision >= 0.3.0
-* scipy == 1.3.1
-* sklearn == 0.5.0
-* numpy == 1.17.4
-* argparse, PIL
+pip install -r requirements.txt
 ```
 
 ## Datasets:
