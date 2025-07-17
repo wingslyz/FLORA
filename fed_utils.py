@@ -33,27 +33,6 @@ def average_weights(w, idxs_users, datanumber_client, islist=False):
     return w_avg
 
 
-def cosine_match_weights(sigma, U, V, idx_uesrs):
-    n = max(idx_uesrs)
-    threshold = torch.nn.Threshold(0.6, 0, inplace=False)
-    lowr = [torch.zeros_like(sigma[0])] * (n + 1)
-    for i in idx_uesrs:
-        lowr[i] = torch.matmul(U[i], V[i])
-    glo_sigma = [torch.zeros_like(sigma[0])] * (n + 1)
-    score = torch.zeros([n + 1, n + 1])
-    cos_sim = torch.nn.CosineSimilarity()
-    for i in idx_uesrs:
-        for j in idx_uesrs:
-            score[i, j] = cos_sim(torch.flatten(lowr[i], 1), torch.flatten(lowr[j], 1))
-            score = threshold(score)
-    score = f.softmax(score, dim=1)
-    print(score)
-    for i in idx_uesrs:
-        for j in idx_uesrs:
-            glo_sigma[i] += sigma[j] * score[i, j]
-    return glo_sigma
-
-
 def cluster_weights(w, datanumber):
     propmt_cluster = []
     for i in range(len(w)):
