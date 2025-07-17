@@ -22,7 +22,8 @@ For DomainNet and office-caltech10 datasets, please follow the instructions of D
 You can select variables like shots, users by changing cfg or you can change every arguments you like in scripts.
 
 ## How to run
-```shell python federated_main.py --root DATA/ --dataset-config-file configs/datasets/oxfordpets.yaml --num-users 10
+```shell
+python federated_main.py --root DATA/ --dataset-config-file configs/datasets/oxfordpets.yaml --num-users 10
 ```
 
 
