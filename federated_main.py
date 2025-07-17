@@ -286,49 +286,7 @@ def main(args):
                 torch.save(local_weights_per, args.output_dir + "/save.pt")
 
 
-        elif args.model == "local":
-            idxs_users = list(range(0, cfg.DATASET.USERS))
-            idxs_users.pop(5)
-            m = max(int(args.frac * args.num_users), 1)
-            # idxs_users = np.random.choice(range(args.num_users), m, replace=False)
-            print("idxs_users", idxs_users)
-            print("------------local train start epoch:", epoch, "-------------")
-            results = []
-            for idx in idxs_users:
-                local_trainer.model.load_state_dict(global_weights)
-                local_trainer.train(idx=idx, global_epoch=epoch, is_fed=True)
-                # results.append(local_trainer.test(idx=idx))
-                acc_idx = local_trainer.test(idx=idx)
-                client_acc[idx].append(acc_idx[0])
-                results.append(acc_idx)
-                local_weight = local_trainer.model.state_dict()
-                local_weights_0[idx] = copy.deepcopy(local_weight['prompt_learner.ctx'])
-                local_weights_per[idx]['prompt_learner.ctx'] = local_weights_0[idx]
-            global_test_acc = []
-            global_test_error = []
-            global_test_f1 = []
-            for k in range(len(results)):
-                global_test_acc.append(results[k][0])
-                global_test_error.append(results[k][1])
-                global_test_f1.append(results[k][2])
-            global_time_list.append(time.time() - start)
-            global_test_acc_list.append(sum(global_test_acc) / len(global_test_acc))
-            global_test_error_list.append(sum(global_test_error) / len(global_test_error))
-            global_test_f1_list.append(sum(global_test_f1) / len(global_test_f1))
-            global_epoch_list.append(epoch)
-            print("Global test acc:", sum(global_test_acc) / len(global_test_acc))
-            print("Global test error:", sum(global_test_error) / len(global_test_error))
-            print("Global test macro_f1:", sum(global_test_f1) / len(global_test_f1))
-            for i in idxs_users:
-                print('client', i, 'local acc', client_acc[i])
-                print('client', i, 'max acc', max(client_acc[i]))
-            print("------------local test finish-------------")
-            print("Epoch on server :", epoch)
-            if sum(global_test_acc) / len(global_test_acc) >= max(global_test_acc_list):
-                torch.save(local_weights_per, args.output_dir + "/save.pt")
-
-
-        elif args.model == 'FedPGP':
+        elif args.model == 'FLORA':
             if epoch == 0:
                 idxs_users = list(range(0, cfg.DATASET.USERS))
             else:
@@ -343,7 +301,7 @@ def main(args):
                     local_trainer.model.load_state_dict(local_weights_per[idx], strict=False)
                 local_trainer.train(idx=idx, global_epoch=epoch, is_fed=True)
                 local_weight = local_trainer.model.state_dict()
-                # 保存本地适应器参数 - 修改为QR分解参数
+                
                 local_weights_0[idx] = copy.deepcopy(local_weight['prompt_learner.sigma'])
                 local_weights_1[idx] = copy.deepcopy(local_weight['prompt_learner.B'])
                 local_weights_2[idx] = copy.deepcopy(local_weight['prompt_learner.A'])
@@ -403,7 +361,6 @@ def main(args):
             if sum(global_test_acc) / len(global_test_acc) >= max(global_test_acc_list):
                 torch.save(local_weights_per, args.output_dir + "/save.pt")
 
-
     for idx in idxs_users:
         local_trainer.fed_after_train()
     # global_trainer.fed_after_train()
@@ -415,9 +372,9 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="FLORA", help="model of aggregation, choose from:fedavg, fedprox, local,FLORA")
+    parser.add_argument("--model", type=str, default="FLORA", help="model of aggregation, choose from:fedavg, fedprox,FLORA")
     parser.add_argument("--trainer", type=str, default="FLORA", help="name of trainer, choose from: CLIP, PromptFL, FLORA")
-    parser.add_argument('--num_users', type=int, default=3, help="number of users: K")
+    parser.add_argument('--num_users', type=int, default=10, help="number of users: K")
     parser.add_argument('--n_ctx', type=int, default=16, help="number of text encoder of text prompts")
     parser.add_argument('--frac', type=float, default=1, help='the fraction of clients: C')
     parser.add_argument('--lr', type=float, default=0.001, help='learning rate')
@@ -431,14 +388,12 @@ if __name__ == "__main__":
     parser.add_argument('--beta', type=float, default=0.3,
                         help='The parameter for the dirichlet distribution for data partitioning')
     parser.add_argument('--mu', type=float, default=1, help='The parameter for fedprox')
-    parser.add_argument('--oo',type=float,default=0.7,help='lamuta')
     parser.add_argument('--temp', type=float, default=0.5, help='The tempuature')
     parser.add_argument('--logdir', type=str, required=False, default="./logs/", help='Log directory path')
     parser.add_argument('--num_prompt', type=int, default=2, help="number of prompts")
     parser.add_argument('--avg_prompt', type=int, default=1, help="number of prompts to average")
     parser.add_argument('--thresh', type=float, default=1e-3, help='the thresh of sinkhorn distance')
     parser.add_argument('--eps', type=float, default=0.1, help='the lambada of sinkhorn distance')
-
     parser.add_argument('--OT', type=str, default='COT', help="type of OT used: Sinkhorn, COT")
     parser.add_argument('--top_percent', type=float, default=1, help='the top_percent of COT')
     parser.add_argument('--max_iter', type=int, default=100, help="max iteration of COT")
@@ -446,23 +401,20 @@ if __name__ == "__main__":
     parser.add_argument('--split_client', default=False, help="is adding label skew to feature skew datasets and split one domain to multi clients")
     parser.add_argument('--num_domain', type=int, default=4, help="number of domain")
     parser.add_argument('--ctx_init', default=False, help="is using the ctx init")
-
     parser.add_argument('--num_shots', type=int, default=16
                         , help="number of shots in few shot setting")
     parser.add_argument('--bottleneck', type=int, default=8,help="number of middle in reparameter")
     parser.add_argument('--local_epoch', type=int, default=1, help="number of local epoch")
     parser.add_argument('--useall', default=True, help="is useall, True for all training samples, False for few shot learning")
-
     parser.add_argument('--train_batch_size', type=int, default=32, help="number of trainer batch size")
     parser.add_argument('--test_batch_size', type=int, default=100, help="number of test batch size")
-
     parser.add_argument("--root", type=str, default="autodl-tmp/FedPGP/DATA/", help="path to dataset")
     parser.add_argument("--output-dir", type=str, default="autodl-tmp/FedPGP/outputtest/", help="output directory")
     parser.add_argument("--resume", type=str, default=None, help="checkpoint directory (from which the training resumes)")
     parser.add_argument("--seed", type=int, default=1, help="only positive value enables a fixed seed")
     parser.add_argument("--transforms", type=str, nargs="+", help="data augmentation methods")
     parser.add_argument("--config-file", type=str, default ="autodl-tmp/FedPGP/configs/trainers/PLOT/vit_b16.yaml", help="path to config file")
-    parser.add_argument("--dataset-config-file", type=str, default="autodl-tmp/FedPGP/configs/datasets/office.yaml", help="path to config file for dataset setup")
+    parser.add_argument("--dataset-config-file", type=str, default="autodl-tmp/FedPGP/configs/datasets/oxfordpets.yaml", help="path to config file for dataset setup")
     parser.add_argument("--backbone", type=str, default="", help="name of CNN backbone")
     parser.add_argument("--head", type=str, default="", help="name of head")
     parser.add_argument("--eval-only", action="store_true", help="evaluation only")
