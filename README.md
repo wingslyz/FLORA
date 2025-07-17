@@ -7,14 +7,14 @@ Federated Prompt Learning (FPL) leverages the robust representation learning and
 ## Requirement
 Follow the instruction described [here](https://github.com/KaiyangZhou/Dassl.pytorch#installation) to install and set up necessary packages and dependencies.
 
-## Datasets:
+## Datasets
 Please follow the instructions at CoOP https://github.com/KaiyangZhou/CoOp/blob/main/DATASETS.md to prepare the following datasets: Caltech101, OxfordPets, Flowers102, Food101, DTD.
 
 For CIFAR10 and CIFAR100 datasets, please download and unzip data under DATA/ file catalog. Or simply run experiments with CIFAR10/CIFAR100 dataset, the program will download data automatically.
 
 For DomainNet and office-caltech10 datasets, please follow the instructions of Dataset described [here](https://github.com/med-air/FedBN/blob/master/README.md).
 
-## Training:
+## Training
 ```--root``` takes as input a path to dataset.
 
 ```--config-file```means which config file to use.
