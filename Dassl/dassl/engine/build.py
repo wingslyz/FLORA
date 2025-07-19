@@ -10,7 +10,7 @@ from trainers.promptfl import PromptFL, Baseline
 #from trainers.repara_push import Repara_push
 #from trainers.maple import MaPLe
 #from trainers.cocoop import CoCoOp
-from trainers.flora import FedPGP
+from trainers.flora import FLORA
 TRAINER_REGISTRY = Registry("TRAINER")
 # TRAINER_REGISTRY.register(CLIP)
 TRAINER_REGISTRY.register(PromptFL)
@@ -24,7 +24,7 @@ TRAINER_REGISTRY.register(Baseline)
 #TRAINER_REGISTRY.register(Repara_push)
 #TRAINER_REGISTRY.register(MaPLe)
 #TRAINER_REGISTRY.register(CoCoOp)
-TRAINER_REGISTRY.register(FedPGP)
+TRAINER_REGISTRY.register(FLORA)
 
 
 def build_trainer(cfg):
